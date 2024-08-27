@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { contactSchema, updateContactSchema } = require('../../schemas/contactSchema');
+const validate = require('../../middlewares/validate');
 
 const contacts = [
   { id: '1', name: 'John Doe', email: 'john@example.com', phone: '123-456-7890' },
@@ -23,12 +24,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/contacts
-router.post('/', (req, res) => {
-  const { error } = contactSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: error.details[0].message });
-  }
-
+router.post('/', validate(contactSchema), (req, res) => {
   const { name, email, phone } = req.body;
   const newContact = {
     id: (contacts.length + 1).toString(),
@@ -52,12 +48,7 @@ router.delete('/:id', (req, res) => {
 });
 
 // PUT /api/contacts/:id
-router.put('/:id', (req, res) => {
-  const { error } = updateContactSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ message: 'missing fields' });
-  }
-
+router.put('/:id', validate(updateContactSchema), (req, res) => {
   const contact = contacts.find(c => c.id === req.params.id);
   if (contact) {
     const { name, email, phone } = req.body;
