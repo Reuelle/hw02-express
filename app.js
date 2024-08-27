@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const contactsRouter = require('./routes/contacts');
+const contactsRouter = require('./routes/api/contacts');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
