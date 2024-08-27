@@ -1,3 +1,4 @@
+// schemas/contactSchema.js
 const Joi = require('joi');
 
 const contactSchema = Joi.object({
@@ -6,4 +7,10 @@ const contactSchema = Joi.object({
   phone: Joi.string().required()
 });
 
-module.exports = contactSchema;
+const updateContactSchema = Joi.object({
+  name: Joi.string(),
+  email: Joi.string().email(),
+  phone: Joi.string()
+}).min(1);
+
+module.exports = { contactSchema, updateContactSchema };
