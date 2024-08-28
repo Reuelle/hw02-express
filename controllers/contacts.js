@@ -1,4 +1,4 @@
-// This is where the business logic for handling contacts goes
+// controllers/contacts.js
 
 exports.addContact = (req, res) => {
   const { name, email, phone } = req.body;
@@ -14,9 +14,28 @@ exports.addContact = (req, res) => {
       phone,
   };
 
-  // This is just an example; replace this with your actual logic
-  // for saving the new contact (e.g., to a database)
   console.log('New contact added:', newContact);
 
   res.status(201).json(newContact);
+};
+
+// Example of other controller functions:
+exports.listContacts = (req, res) => {
+  // Logic to list all contacts
+};
+
+exports.getById = (req, res) => {
+  const { id } = req.params;
+  // Logic to get a contact by ID
+};
+
+exports.updateContact = (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone } = req.body;
+  // Logic to update a contact
+};
+
+exports.removeContact = (req, res) => {
+  const { id } = req.params;
+  // Logic to remove a contact
 };

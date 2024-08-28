@@ -4,19 +4,11 @@ const { contactSchema, updateContactSchema } = require('../../schemas/contactSch
 const validate = require('../../middlewares/validate');
 const contactsController = require('../../controllers/contacts');
 
-// GET /api/contacts
-router.get('/', contactsController.getAllContacts);
-
-// GET /api/contacts/:id
-router.get('/:id', contactsController.getContactById);
-
-// POST /api/contacts
-router.post('/', validate(contactSchema), contactsController.addContact);
-
-// DELETE /api/contacts/:id
-router.delete('/:id', contactsController.deleteContact);
-
-// PUT /api/contacts/:id
-router.put('/:id', validate(updateContactSchema), contactsController.updateContact);
+// Example of a GET route
+router.get('/', contactsController.listContacts);
+router.get('/:id', contactsController.getById);
+router.post('/', contactsController.addContact);
+router.delete('/:id', contactsController.removeContact);
+router.put('/:id', contactsController.updateContact);
 
 module.exports = router;
