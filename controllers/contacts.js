@@ -1,41 +1,39 @@
-// controllers/contacts.js
 
-exports.addContact = (req, res) => {
-  const { name, email, phone } = req.body;
+let contacts = [];
 
-  if (!name || !email || !phone) {
-      return res.status(400).json({ message: 'Missing required fields' });
+// List all contacts
+exports.listContacts = (req, res) => {
+  res.json(contacts);
+};
+
+// Get a contact by ID
+exports.getById = (req, res) => {
+  const contact = contacts.find(c => c.id === parseInt(req.params.id));
+  if (!contact) {
+    return res.status(404).json({ message: 'Contact not found' });
   }
+  res.json(contact);
+};
 
-  const newContact = {
-      id: Date.now().toString(),
-      name,
-      email,
-      phone,
-  };
-
-  console.log('New contact added:', newContact);
-
+// Add a new contact
+exports.addContact = (req, res) => {
+  const newContact = { id: contacts.length + 1, ...req.body };
+  contacts.push(newContact);
   res.status(201).json(newContact);
 };
 
-// Example of other controller functions:
-exports.listContacts = (req, res) => {
-  // Logic to list all contacts
-};
-
-exports.getById = (req, res) => {
-  const { id } = req.params;
-  // Logic to get a contact by ID
-};
-
+// Update a contact by ID
 exports.updateContact = (req, res) => {
-  const { id } = req.params;
-  const { name, email, phone } = req.body;
-  // Logic to update a contact
+  const contact = contacts.find(c => c.id === parseInt(req.params.id));
+  if (!contact) {
+    return res.status(404).json({ message: 'Contact not found' });
+  }
+  Object.assign(contact, req.body);
+  res.json(contact);
 };
 
+// Remove a contact by ID
 exports.removeContact = (req, res) => {
-  const { id } = req.params;
-  // Logic to remove a contact
+  contacts = contacts.filter(c => c.id !== parseInt(req.params.id));
+  res.status(204).end();
 };

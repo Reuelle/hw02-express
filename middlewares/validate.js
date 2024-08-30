@@ -1,9 +1,11 @@
-// middlewares/validate.js
-module.exports = (req, res, next) => {
-    const { name, email, phone } = req.body;
-    if (!name || !email || !phone) {
-      return res.status(400).json({ message: 'Missing required fields' });
+const validate = (schema) => {
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
     next();
   };
-  
+};
+
+module.exports = validate;

@@ -7,8 +7,11 @@ const contactsController = require('../../controllers/contacts');
 // Example of a GET route
 router.get('/', contactsController.listContacts);
 router.get('/:id', contactsController.getById);
-router.post('/', contactsController.addContact);
+
+// Apply validation before handling the request
+router.post('/', validate(contactSchema), contactsController.addContact);
+router.put('/:id', validate(updateContactSchema), contactsController.updateContact);
+
 router.delete('/:id', contactsController.removeContact);
-router.put('/:id', contactsController.updateContact);
 
 module.exports = router;
