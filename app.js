@@ -6,7 +6,7 @@ const contactsRouter = require('./routes/api/contacts');
 const app = express();
 
 app.use(cors());
-app.use(express.json()); // This middleware parses JSON bodies
+app.use(express.json()); 
 app.use(morgan('tiny'));
 
 app.use('/api/contacts', contactsRouter);

@@ -1,4 +1,4 @@
-// schemas/contactSchema.js
+
 const Joi = require('joi');
 
 const contactSchema = Joi.object({
