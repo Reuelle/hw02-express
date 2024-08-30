@@ -1,4 +1,4 @@
-
+// Mock database for demonstration purposes
 let contacts = [];
 
 // List all contacts
@@ -8,7 +8,9 @@ exports.listContacts = (req, res) => {
 
 // Get a contact by ID
 exports.getById = (req, res) => {
-  const contact = contacts.find(c => c.id === parseInt(req.params.id));
+  const id = parseInt(req.params.id);
+  console.log(`Looking for contact with ID: ${id}`);
+  const contact = contacts.find(c => c.id === id);
   if (!contact) {
     return res.status(404).json({ message: 'Contact not found' });
   }
