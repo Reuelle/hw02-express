@@ -1,13 +1,12 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const mongoose = require('mongoose'); // Import mongoose
-const contactsRouter = require('./routes/api/contacts');
-const errorHandler = require('./helpers/errorHandler'); // Importing the error handler
+const errorHandler = require('./helpers/errorHandler');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const MONGO_URL = process.env.MONGO_URL || 'mongodb+srv://<username>:<password>@cluster0.mongodb.net/db-contacts?retryWrites=true&w=majority'; // Replace with your actual MongoDB URL
+const PORT = process.env.PORT || 3003;
+const MONGO_URL = process.env.DB_HOST;
 
 // Middleware setup
 app.use(cors());
@@ -27,20 +26,14 @@ mongoose.connect(MONGO_URL, {
     process.exit(1); // Exit process with failure
   });
 
-// Routes setup
-app.use('/api/contacts', contactsRouter);
-
-// 404 error handler for unknown routes
-app.use((req, res) => {
-  res.status(404).json({ message: 'Not found' });
-});
-
-// Global error handler
+// Routes and error handler setup
+app.use('/api/contacts', require('./routes/api/contacts'));
+app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running. Use our API on port: ${PORT}`);
 });
 
 module.exports = app;
