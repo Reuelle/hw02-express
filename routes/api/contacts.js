@@ -1,29 +1,31 @@
-const express = require('express');
-const router = express.Router();
-const validateContact = require('../../helpers/validateContact'); // Ensure this helper is correctly defined
+const express = require("express");
+const { schemas } = require("../../models/contacts");
+
+const { isValidId, validateBody } = require("../../middleware/index");
+
 const {
   listContacts,
   getContactById,
-  removeContact,
   addContact,
-  updateContact
-} = require('../../models/contacts'); // Correct path to the models
+  removeContact,
+  updateStatusContact,
+} = require("../../controller/contact");
 
-// POST request to add a new contact
-router.post('/', async (req, res, next) => {
-  try {
-    // Validate the request body
-    const { error } = validateContact(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+const router = express.Router();
 
-    // Add the new contact
-    const newContact = await addContact(req.body);
-    res.status(201).json(newContact);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/", listContacts);
+
+router.get("/:contactId", isValidId, getContactById);
+
+router.post("/", validateBody(schemas.addSchema), addContact);
+
+router.delete("/:contactId", isValidId, removeContact);
+
+router.patch(
+  "/:contactId/favorite",
+  isValidId,
+  validateBody(schemas.updateFavoriteSchema),
+  updateStatusContact
+);
 
 module.exports = router;

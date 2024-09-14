@@ -1,8 +1,19 @@
-require('dotenv').config(); // Ensure this is at the top
+require('dotenv').config(); // Ensure to load environment variables
 
-const app = require("./app");
-const PORT = process.env.PORT || 3003; // Use PORT from .env or default to 3002
+const mongoose = require('mongoose');
+const app = require('./app');
+const { DB_HOST, PORT = 3000 } = process.env;
 
-app.listen(PORT, () => {
-  console.log(`Server is running. Use our API on port: ${PORT}`);
-});
+mongoose.set('strictQuery', true);
+
+mongoose.connect(DB_HOST)
+  .then(() => {
+    console.log('Database connected successfully !!!');
+    app.listen(PORT, () => {
+      console.log(`Server running on port: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Database connection error 🙁', error.message);
+    process.exit(1); // Exit the process if the database connection fails
+  });
