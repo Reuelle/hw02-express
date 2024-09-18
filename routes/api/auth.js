@@ -1,78 +1,25 @@
-const { Schema, model } = require("mongoose");
-const Joi = require("joi");
+const express = require("express");
+const router = express.Router();
 
-const handleMongooseError = require("../middleware/handleMongooseError");
+const ctrl = require("../../controller/auth");
+const { schemas } = require("../../models/user");
+const { validateBody, authenticate, upload } = require("../../middlewares");
 
-const emailRegexp =
-  // eslint-disable-next-line no-useless-escape
-  /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
-const userSchema = new Schema(
-  {
-    password: {
-      type: String,
-      minLength: 6,
-      required: [true, "Set password for user"],
-    },
-    email: {
-      type: String,
-      match: emailRegexp,
-      unique: true,
-      required: [true, "Email is required"],
-    },
-    subscription: {
-      type: String,
-      enum: ["starter", "pro", "business"],
-      default: "starter",
-    },
-    token: {
-      type: String,
-      default: "",
-    },
-    avatarURL: {
-      type: String,
-      required: true,
-    },
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      // default: '',
-      required: [true, "Verify token is required"],
-    },
-  }
-  // { versionKey: false, timestamps: true }
+router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
+router.get("/verify/:verificationToken", ctrl.verify);
+router.post(
+  "/verify",
+  validateBody(schemas.verifySchema),
+  ctrl.resendVerifyEmail
+);
+router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
+router.get("/current", authenticate, ctrl.getCurrent);
+router.post("/logout", authenticate, ctrl.logout);
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  ctrl.updateAvater
 );
 
-
-userSchema.post("save", handleMongooseError);
-
-const registerSchema = Joi.object({
-  name: Joi.string(),
-  email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().min(6).required(),
-});
-
-const verifySchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
-});
-
-const loginSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().min(6).required(),
-});
-
-const schemas = {
-  registerSchema,
-  loginSchema,
-  verifySchema,
-};
-
-const User = model("user", userSchema);
-
-module.exports = {
-  User,
-  schemas,
-};
+module.exports = router;

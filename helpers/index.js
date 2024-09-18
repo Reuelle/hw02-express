@@ -1,6 +1,6 @@
-const HttpError = require("./HttpError");
+const HttpError = require("./HttpErrors");
 const ctrlWrapper = require("./ctrlWrapper");
-const sendEmail = require("./HttpError");
+const sendEmail = require("./HttpErrors");
 
 module.exports = {
   HttpError,
