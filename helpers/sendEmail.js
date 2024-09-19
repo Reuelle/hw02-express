@@ -1,12 +1,16 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+// const { META_PASS } = process.env;
 
 const nodemailerConfig = {
-  
+  // host: "smtp.meta.ua",
+  // port: 465,
+  // secure: true,
   host: "smtp.ethereal.email",
   port: 587,
   auth: {
-   
+    // user: "anton.palienko@meta.ua",
+    // pass: META_PASS,
     user: "joanne.dickens@ethereal.email",
     pass: "9JJB23YmnKwDTYusBN",
   },
