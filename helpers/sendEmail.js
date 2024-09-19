@@ -1,29 +1,21 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
-// const { META_PASS } = process.env;
+const sgMail = require('@sendgrid/mail');
+require('dotenv').config();
 
-const nodemailerConfig = {
-  // host: "smtp.meta.ua",
-  // port: 465,
-  // secure: true,
-  host: "smtp.ethereal.email",
-  port: 587,
-  auth: {
-    // user: "anton.palienko@meta.ua",
-    // pass: META_PASS,
-    user: "joanne.dickens@ethereal.email",
-    pass: "9JJB23YmnKwDTYusBN",
-  },
-};
+const { SENDGRID_API_KEY } = process.env;
 
-const transport = nodemailer.createTransport(nodemailerConfig);
+sgMail.setApiKey(SENDGRID_API_KEY);
 
 const sendEmail = async (data) => {
   try {
-    const email = { ...data, from: "joanne.dickens@ethereal.email" };
-    await transport.sendMail(email);
+    const email = {
+      ...data,
+      from: 'your_verified_email@domain.com', // Replace this with a verified sender email on SendGrid
+    };
+
+    await sgMail.send(email);
     return true;
   } catch (error) {
+    console.error("Error sending email:", error);
     throw error;
   }
 };
